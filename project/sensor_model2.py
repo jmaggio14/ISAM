@@ -50,6 +50,7 @@ plt.legend()
 
 plt.ion()
 plt.show()
+plt.savefig('out/ideal_DQE.png')
 
 ################################################################################
 #                                       1
@@ -75,6 +76,7 @@ handles.extend([Line2D([0], [0], color='k', linestyle=':', label='saturation')])
 plt.legend(handles=handles)
 plt.ion()
 plt.show()
+plt.savefig('out/eta_scaled_DQE.png')
 
 ################################################################################
 # DQE with read noise = 10 and 4bit AD noise
@@ -103,6 +105,7 @@ handles.extend([Line2D([0], [0], color='k', linestyle=':', label='saturation')])
 plt.legend(handles=handles)
 plt.ion()
 plt.show()
+plt.savefig('out/read_noise_4bit_DQE.png')
 
 ################################################################################
 #                                   2
@@ -139,6 +142,7 @@ handles, _ = plt.gca().get_legend_handles_labels()
 plt.legend(handles=handles)
 plt.ion()
 plt.show()
+plt.savefig('out/DQE_by_read_noise.png')
 
 ################################################################################
 # DQE with eta=0.5 and no read noise, various AD bitdepths
@@ -163,6 +167,7 @@ handles, _ = plt.gca().get_legend_handles_labels()
 plt.legend(handles=handles)
 plt.ion()
 plt.show()
+plt.savefig('out/DQE_by_bitdepth.png')
 
 
 ################################################################################
@@ -195,6 +200,7 @@ for p in pitches:
 plt.legend()
 plt.ion()
 plt.show()
+plt.savefig('out/normalized_vs_logE.png')
 
 
 
@@ -243,6 +249,7 @@ for p in pitches:
 plt.legend()
 plt.ion()
 plt.show()
+plt.savefig('out/variance_vs_normalized.png')
 
 ################################################################################
 #                                     5
@@ -281,6 +288,7 @@ for p in pitches:
 plt.legend()
 plt.ion()
 plt.show()
+plt.savefig('out/variance_vs_mean_count.png')
 
 
 ################################################################################
@@ -316,5 +324,6 @@ for i,p in enumerate(pitches):
 
 plt.ion()
 plt.show()
+plt.savefig('out/DQE_by_mean_count.png')
 
 import pdb; pdb.set_trace()
