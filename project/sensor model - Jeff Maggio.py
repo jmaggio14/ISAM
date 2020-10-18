@@ -44,8 +44,12 @@ class SensorModel(object):
                 (poisson mean)
 
         """
-        val = poisson.cdf(L,qbar)
+        val = poisson.cdf(self.L,qbar)
+        # val = 0
+        # for i in range(self.L):
+        #     val += poisson.pmf(i,qbar) / self.L
 
+        # import pdb; pdb.set_trace()
         return val / self.L
 
     # --------------------------------------------------------------------------
@@ -86,34 +90,43 @@ class SensorModel(object):
         ideal_DQE = (qbar * (f2**2)) / ((1-f3) - (1-f1)**2)
         return ideal_DQE
 
+    def ideal_components(self,qbar):
+        f1 = self.f1(qbar)
+        f2 = self.f2(qbar)
+        f3 = self.f3(qbar)
+        SN_in = (qbar * (f2**2))
+        sigma_sq_l = ((1-f3) - (1-f1)**2)
+        return SN_in, sigma_sq_l
+
     # --------------------------------------------------------------------------
     def DQE(self, qbar, a2d_noise=True):
-        f2 = self.f2(qbar)
-        numerator = (qbar * (f2**2))
-        denominator = self.poisson_noise(qbar) + self.read_noise
-        if a2d_noise:
-            denominator + self.a2d_noise()
+        ideal_SN_in, sigma_sq_l = self.ideal_components(qbar)
 
-        DQE = numerator / denominator
-        return self.quantize(self.eta * DQE)
+        sigma_sq_r = self.read_noise / self.L**2
+        sigma_sq_a2d = self.a2d_noise() if a2d_noise else 0
+
+        ideal_DQE = ideal_SN_in / sigma_sq_l
+        DQE = ideal_SN_in / (sigma_sq_l + sigma_sq_r + sigma_sq_a2d)
+        # import pdb; pdb.set_trace()
+        return self.eta * DQE
 
     # --------------------------------------------------------------------------
     def poisson_noise(self,qbar):
         f1 = self.f1(qbar)
         f3 = self.f3(qbar)
-        return ((1-f3) - (1-f1)**2)
+        return ((1-f3) - (1-f1)**2) * (self.L**2)
 
     # --------------------------------------------------------------------------
     def a2d_noise(self):
         N = int(2**self.bitdepth) - 1
-        return (2*N)**2 / 12
+        return (2*N)**2 / 12 / self.L**2
 
     # --------------------------------------------------------------------------
     def quantize(self, arr):
         # N = int(2**self.bitdepth)
-        # quant = (arr / N)
-        # bins = np.linspace(0, self.L,N)
-        # indices = np.digitize(arr,bins,right=True)
+        # # quant = (arr / N)
+        # bins = np.linspace(0, self.L, N)
+        # indices = np.digitize(arr, bins, right=False)
         # return bins[indices]
         return arr
 
@@ -144,19 +157,24 @@ plt.show()
 plt.legend()
 
 dqes = []
-for eta in etas:
+for eta in reversed(etas):
     sensor = SensorModel(L, eta, read_noise, bitdepth)
-    dqe = sensor.DQE(qbar)
+    dqe = sensor.DQE(qbar) * eta
+    dqes.append(dqe)
 
     plt.plot(qbar / eta, dqe, label=f"eta={eta}")
+
+    print(f"eta is {eta}")
+    print(f"f1 is {np.round(sensor.f1(qbar),5)[:11]}")
+    print(f"f3 is {np.round(sensor.f3(qbar),5)[:11]}")
+    print(f"f2 is {np.round(sensor.f2(qbar),5)[:11]}")
+    print()
+    # import pdb; pdb.set_trace()
 
 plt.legend()
 
 
-print(np.round(sensor.f1(qbar),6))
-print(np.round(sensor.f2(qbar),6))
-print(np.round(sensor.f3(qbar),6))
-
+# import pdb; pdb.set_trace()
 # the DQE is improperly scaled
 # f2 is off by approximately a factor of 1000
 
@@ -182,7 +200,6 @@ plt.xlim(0,3001)
 
 plt.ion()
 plt.show()
-plt.legend()
 
 for rn in read_noises:
     sensor = SensorModel(L, eta, rn, bitdepth)
