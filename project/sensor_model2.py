@@ -42,7 +42,7 @@ ideal_DQE =  NUMERATOR / sigma_sq_l
 fig = plt.figure()
 ax = fig.add_subplot(111)
 plt.title("IDEAL DQE (shot noise only)")
-plt.xlabel(r"qbar / $\eta$ $\it{photons}$")
+plt.xlabel(r"\bar{q} / $\eta$ $\it{photons}$")
 plt.ylabel("DQE")
 plt.axvline(L,label='L (saturation)',linestyle=':')
 plt.plot(QBAR,ideal_DQE,label=r"ideal DQE ($\eta$=1)")
@@ -61,7 +61,7 @@ etas = [0.125, 0.25, 0.5, 1.0]
 fig = plt.figure()
 ax = fig.add_subplot(111)
 plt.title(r"DQE scaled by $\eta$ only")
-plt.xlabel(r"qbar / $\eta$ $\it{photons}$")
+plt.xlabel(r"\bar{q} / $\eta$ $\it{photons}$")
 plt.ylabel("DQE")
 
 for eta in etas:
@@ -89,7 +89,7 @@ fig = plt.figure()
 fig.suptitle(r"DQE with $\sigma_{r}=10e-$, 4bit ADC")
 ax1 = fig.add_subplot(111)
 # ax1.set_title("no quantization")
-plt.xlabel(r"qbar / $\eta$ $\it{photons}$")
+plt.xlabel(r"\bar{q} / $\eta$ $\it{photons}$")
 plt.ylabel("DQE")
 plt.xlim(0,1e4)
 plt.ylim(0,1.05)
@@ -121,7 +121,7 @@ fig = plt.figure()
 fig.suptitle(r"DQE by read noise with $\eta=0.5$, no ADC noise")
 ax1 = fig.add_subplot(111)
 # ax1.set_title("no quantization")
-plt.xlabel(r"qbar / $\eta$ $\it{photons}$")
+plt.xlabel(r"\bar{q} / $\eta$ $\it{photons}$")
 plt.ylabel("DQE")
 plt.xlim(0,3000)
 plt.ylim(0,1.05)
@@ -152,7 +152,7 @@ fig = plt.figure()
 fig.suptitle(r"DQE by bitdepth with $\eta=0.5$, no read noise")
 ax1 = fig.add_subplot(111)
 # ax1.set_title("no quantization")
-plt.xlabel(r"qbar / $\eta$ $\it{photons}$")
+plt.xlabel(r"\bar{q} / $\eta$ $\it{photons}$")
 plt.ylabel("DQE")
 plt.xlim(0,3000)
 plt.ylim(0,1.05)
@@ -194,7 +194,7 @@ normalized_l = l / L
 
 E = QBAR
 for p in pitches:
-    plt.plot(np.log(E),normalized_l,label=f'{p}'+r'$\mu m$')
+    plt.plot(np.log10(E),normalized_l,label=f'{p}'+r'$\mu m$')
     E = E * 4
 
 plt.legend()
@@ -241,7 +241,7 @@ for p in pitches:
     plt.plot(normalized_l, variance, label=f'{p}'+r'$\mu m$')
 
     fig.add_subplot(122)
-    plt.plot(np.log(E), variance, label=f'{p}'+r'$\mu m$')
+    plt.plot(np.log10(E), variance, label=f'{p}'+r'$\mu m$')
 
     variance = variance / 4
     E = E * 4
@@ -280,7 +280,7 @@ variance = sigma_sq_l
 for p in pitches:
     fig.add_subplot(111)
     dqe = NUMERATOR / sigma_sq_l
-    plt.plot(np.log(E), dqe, label=f'{p}'+r'$\mu m$')
+    plt.plot(np.log10(E), dqe, label=f'{p}'+r'$\mu m$')
 
     variance = variance / 4
     E = E * 4
@@ -306,16 +306,16 @@ for i,p in enumerate(pitches):
     ax.set_ylabel("DQE")
     ax.set_ylim(0,2)
     ax.set_title(f'{p}'+r'$\mu m$')
-    ax.set_xlim(0,10)
+    ax.set_xlim(0,5)
     dqe = NUMERATOR / sigma_sq_l
-    plt.plot(np.log(E), dqe, label=f'{p}'+r'$\mu m$')
+    plt.plot(np.log10(E), dqe, label=f'{p}'+r'$\mu m$')
     handles1, _ = ax.get_legend_handles_labels()
 
     ax_twin = ax.twinx()
     ax_twin.set_ylabel("normalized count")
     ax_twin.set_ylim(0,1)
     ax_twin.tick_params(axis='y')
-    plt.plot(np.log(E), normalized_l,linestyle=':',label='mean count')
+    plt.plot(np.log10(E), normalized_l,linestyle=':',label='mean count')
     handles2, _ = ax_twin.get_legend_handles_labels()
     plt.legend(handles=handles1+handles2, loc='upper left')
 
