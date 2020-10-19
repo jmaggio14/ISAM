@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-QBAR = np.arange(1,8001,200)
+QBAR = np.linspace(1,8001,400)
 L = 1024
 
 ################################################################################
@@ -113,7 +113,7 @@ plt.savefig('out/read_noise_4bit_DQE.png')
 # DQE with eta=0.5 and 0 AD noise, various read noises
 eta = 0.5
 read_noises = [1,3,10]
-QBAR = np.arange(1,3001,200)
+QBAR = np.linspace(1,3001,200)
 scaled_q = QBAR / eta
 
 
@@ -135,9 +135,10 @@ sigma_sq_l = ( (1-f3) - (1-f1)**2 ) * L**2
 for rn in read_noises:
     dqe = eta * NUMERATOR / (sigma_sq_l + rn**2)
     sigma_ad_sq = (L**2) / (12 * 2**(2*bitdepth))
-    lines = plt.plot(scaled_q, dqe, label=r'$\sigma_{r}$='+f'{rn}')
+    lines = plt.plot(scaled_q, dqe, label=r'$\sigma_{read}^{2}$='+f'{rn}')
 
 plt.axvline(L/eta,linestyle=':',color='k',label='saturation')
+plt.axhline(eta,linestyle='--',alpha=0.5,color='red',label=r'$\eta$')
 handles, _ = plt.gca().get_legend_handles_labels()
 plt.legend(handles=handles)
 plt.ion()
@@ -163,6 +164,7 @@ for b in bitdepths:
     lines = plt.plot(scaled_q, dqe, label=f'{b} bits')
 
 plt.axvline(L/eta,linestyle=':',color='k',label='saturation')
+plt.axhline(eta,linestyle='--',alpha=0.5,color='red',label=r'$\eta$')
 handles, _ = plt.gca().get_legend_handles_labels()
 plt.legend(handles=handles)
 plt.ion()
@@ -175,7 +177,7 @@ plt.savefig('out/DQE_by_bitdepth.png')
 ################################################################################
 # normalized pixel values vs logE for various pitch pitches
 
-QBAR = np.arange(1,3001,20)
+QBAR = np.linspace(1,3001,200)
 f1 = calc_f1(QBAR,L)
 pitches = [20,10,5]
 
@@ -209,7 +211,7 @@ plt.savefig('out/normalized_vs_logE.png')
 ################################################################################
 #
 pitches = [20,10,5]
-QBAR = np.arange(1,3001,20)
+QBAR = np.linspace(1,3001,200)
 f1 = calc_f1(QBAR,L)
 f2 = calc_f2(QBAR,L)
 f3 = calc_f3(QBAR,L)
@@ -255,7 +257,7 @@ plt.savefig('out/variance_vs_normalized.png')
 #                                     5
 ################################################################################
 pitches = [20,10,5]
-QBAR = np.arange(1,3001,20)
+QBAR = np.linspace(1,3001,200)
 f1 = calc_f1(QBAR,L)
 f2 = calc_f2(QBAR,L)
 f3 = calc_f3(QBAR,L)
